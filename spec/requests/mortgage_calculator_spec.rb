@@ -15,7 +15,7 @@ RSpec.describe 'Mortgage Calculator', type: :request do
       before { get '/payment-amount', params: valid_params }
 
       it 'returns correct amount' do
-        expect(json['amount']).to eq('3140.03')
+        expect(json['amount']).to eq(3140.03)
       end
 
       it 'returns status code 200' do
