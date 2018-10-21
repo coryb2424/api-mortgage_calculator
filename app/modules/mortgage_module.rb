@@ -1,64 +1,57 @@
 module MortgageModule
   SCHEDULE_MAP = {
-    'monthly' => 12,
-    'biweekly' => 26,
-    'weekly' => 52
+    'monthly'=> 12,
+    'biweekly'=> 26,
+    'weekly'=> 52
   }
 
-  # Validates the params, return comprehensive errors
-  def validate_params(params)
-    errors = ''
-
-    # Validate Asking Price and Down Payment
-    errors += validate_ap_and_dp(params['asking_price'], params['down_payment'])
-
-    # Validate Payment Schedule
-    errors += validate_payment_schedule(params['payment_schedule'])
-
-    # Validate Amortization Period
-    errors += validate_amortization_period(params['amortization_period'])
-
-    errors = "Validation failed: #{errors}" if errors.present?
-    errors.strip.gsub('  ', ', ')
-  end
-
+  # Validate Asking Price and Down Payment
   def validate_ap_and_dp(asking_price, down_payment)
-    errors = ''
+    errors = []
     if asking_price.nil?
-      errors += ' missing params asking_price '
+      errors << 'missing params asking_price'
     elsif down_payment.nil?
-      errors += ' missing params down_payment '
+      errors << 'missing params down_payment'
     else
       minimum_dp = minimum_down_payment(asking_price.to_f)
       unless down_payment.to_f.zero? || down_payment.to_f >= minimum_dp
-        errors += " down payment needs to be at least #{minimum_dp} "
+        errors << "down payment needs to be at least #{minimum_dp}"
       end
     end
     errors
   end
 
+  # Validate Payment Schedule
   def validate_payment_schedule(payment_schedule)
-    errors = ''
+    errors = []
     schedule = %w[weekly biweekly monthly]
     if payment_schedule.nil?
-      errors += ' missing params payment_schedule '
+      errors << 'missing params payment_schedule'
     else
       unless schedule.include? payment_schedule
-        errors += " payment schedule can only be: #{schedule.join(', ')} "
+        errors << "payment schedule can only be: #{schedule.join(', ')}"
       end
     end
     errors
   end
 
+  # Validate Amortization Period
   def validate_amortization_period(amortization_period)
-    errors = ''
+    errors = []
     if amortization_period.nil?
-      errors += ' missing params payment_schedule '
+      errors << 'missing params payment_schedule'
     else
       unless amortization_period.to_f > 5 && amortization_period.to_f <= 25
-        errors += " amortization period needs to be betwenn 5 and 25 years, inclusive "
+        errors << "amortization period needs to be betwenn 5 and 25 years inclusive"
       end
     end
+    errors
+  end
+
+  # Validate Payment Amount
+  def validate_payment_amount(payment_amount)
+    errors = []
+    errors << 'missing params payment_amount' if payment_amount.nil?
     errors
   end
 
@@ -77,5 +70,17 @@ module MortgageModule
     denominator = (1 + nominal_interest_rate) ** number_of_payments - 1
 
     (numerator / denominator).round(2)
+  end
+
+  def calculate_max_mortgage(params, interest_rate)
+    number_of_payments = SCHEDULE_MAP[params['payment_schedule']] * params['amortization_period']
+    nominal_interest_rate = (interest_rate / SCHEDULE_MAP[params['payment_schedule']]) / 100
+
+    numerator = params['payment_amount'] * ((1 + nominal_interest_rate) ** number_of_payments - 1)
+    denominator = nominal_interest_rate * (1 + nominal_interest_rate) ** number_of_payments
+
+    max_mortgage = (numerator / denominator).round(2)
+    max_mortgage += params['down_payment'] if params['down_payment'].present?
+    max_mortgage
   end
 end
