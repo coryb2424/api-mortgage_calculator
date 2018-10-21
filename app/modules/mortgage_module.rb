@@ -5,61 +5,52 @@ module MortgageModule
     'weekly'=> 52
   }
 
+  def validate(params)
+    errors = []
+    params.each do |param, value|
+      errors << "missing params #{param}" if value.blank?
+    end
+    yield(errors) if block_given? && errors.blank?
+    errors
+  end
+
   # Validate Asking Price and Down Payment Params
   def validate_ap_and_dp(asking_price, down_payment)
-    errors = []
-    if asking_price.blank?
-      errors << 'missing params asking_price'
-    elsif down_payment.blank?
-      errors << 'missing params down_payment'
-    else
+    validate(asking_price: asking_price, down_payment: down_payment) do |errors|
       minimum_dp = minimum_down_payment(asking_price.to_f)
       unless down_payment.to_f.zero? || down_payment.to_f >= minimum_dp
         errors << "down payment needs to be at least #{minimum_dp}"
       end
     end
-    errors
   end
 
   # Validate Payment Schedule Param
   def validate_payment_schedule(payment_schedule)
-    errors = []
-    schedule = %w[weekly biweekly monthly]
-    if payment_schedule.blank?
-      errors << 'missing params payment_schedule'
-    else
+    validate(payment_schedule: payment_schedule) do |errors|
+      schedule = %w[weekly biweekly monthly]
       unless schedule.include? payment_schedule
         errors << "payment schedule can only be: #{schedule.join(', ')}"
       end
     end
-    errors
   end
 
   # Validate Amortization Period Param
   def validate_amortization_period(amortization_period)
-    errors = []
-    if amortization_period.blank?
-      errors << 'missing params payment_schedule'
-    else
+    validate(amortization_period: amortization_period) do |errors|
       unless amortization_period.to_f > 5 && amortization_period.to_f <= 25
         errors << "amortization period needs to be betwenn 5 and 25 years inclusive"
       end
     end
-    errors
   end
 
   # Validate Payment Amount Param
   def validate_payment_amount(payment_amount)
-    errors = []
-    errors << 'missing params payment_amount' if payment_amount.blank?
-    errors
+    validate(payment_amount: payment_amount)
   end
 
   # Validate Interest Rate Param
   def validate_interest_rate(interest_rate)
-    errors = []
-    errors << 'missing params interest_rate' if interest_rate.blank?
-    errors
+    validate(interest_rate: interest_rate)
   end
 
   def minimum_down_payment(asking_price)
