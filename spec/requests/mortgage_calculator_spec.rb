@@ -12,7 +12,7 @@ RSpec.describe 'Mortgage Calculator', type: :request do
     end
 
     describe 'GET /payment-amount' do
-      before { get '/payment-amount', valid_params }
+      before { get '/payment-amount', params: valid_params }
 
       it 'returns correct amount' do
         expect(json['amount']).to eq('3140.03')
@@ -24,8 +24,8 @@ RSpec.describe 'Mortgage Calculator', type: :request do
     end
   end
 
-  context 'when the request is invalid' do
-    let(:invalid_down_payment) do
+  context 'when the request is invalid due to low down payment' do
+    let(:invalid_params_down_payment) do
       {
         asking_price: '750000',
         down_payment: '10000',
@@ -35,7 +35,7 @@ RSpec.describe 'Mortgage Calculator', type: :request do
     end
 
     describe 'GET /payment-amount' do
-      before { get '/payment-amount', invalid_down_payment }
+      before { get '/payment-amount', params: invalid_params_down_payment }
 
       it 'returns validation error message' do
         expect(response.body)
