@@ -5,12 +5,12 @@ module MortgageModule
     'weekly'=> 52
   }
 
-  # Validate Asking Price and Down Payment
+  # Validate Asking Price and Down Payment Params
   def validate_ap_and_dp(asking_price, down_payment)
     errors = []
-    if asking_price.nil?
+    if asking_price.blank?
       errors << 'missing params asking_price'
-    elsif down_payment.nil?
+    elsif down_payment.blank?
       errors << 'missing params down_payment'
     else
       minimum_dp = minimum_down_payment(asking_price.to_f)
@@ -21,11 +21,11 @@ module MortgageModule
     errors
   end
 
-  # Validate Payment Schedule
+  # Validate Payment Schedule Param
   def validate_payment_schedule(payment_schedule)
     errors = []
     schedule = %w[weekly biweekly monthly]
-    if payment_schedule.nil?
+    if payment_schedule.blank?
       errors << 'missing params payment_schedule'
     else
       unless schedule.include? payment_schedule
@@ -35,10 +35,10 @@ module MortgageModule
     errors
   end
 
-  # Validate Amortization Period
+  # Validate Amortization Period Param
   def validate_amortization_period(amortization_period)
     errors = []
-    if amortization_period.nil?
+    if amortization_period.blank?
       errors << 'missing params payment_schedule'
     else
       unless amortization_period.to_f > 5 && amortization_period.to_f <= 25
@@ -48,10 +48,17 @@ module MortgageModule
     errors
   end
 
-  # Validate Payment Amount
+  # Validate Payment Amount Param
   def validate_payment_amount(payment_amount)
     errors = []
-    errors << 'missing params payment_amount' if payment_amount.nil?
+    errors << 'missing params payment_amount' if payment_amount.blank?
+    errors
+  end
+
+  # Validate Interest Rate Param
+  def validate_interest_rate(interest_rate)
+    errors = []
+    errors << 'missing params interest_rate' if interest_rate.blank?
     errors
   end
 

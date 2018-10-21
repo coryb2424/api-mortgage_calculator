@@ -2,7 +2,7 @@ class MortgageCalculatorController < ApplicationController
   include MortgageModule
   include InsuranceModule
 
-  INTEREST_RATE = 2.5
+  @@interest_rate = 2.5
 
   def payment_amount
     errors = []
@@ -17,7 +17,7 @@ class MortgageCalculatorController < ApplicationController
     params['amortization_period'] = params['amortization_period'].to_f
 
     insurance_cost = calculate_insurance_amount(params)
-    payment_amount = calculate_payment_amount(params, insurance_cost, INTEREST_RATE)
+    payment_amount = calculate_payment_amount(params, insurance_cost, @@interest_rate)
     json_response(amount: payment_amount)
   end
 
@@ -33,8 +33,21 @@ class MortgageCalculatorController < ApplicationController
     params['amortization_period'] = params['amortization_period'].to_f
     params['down_payment'] = params['down_payment'].to_f if params['down_payment'].present?
 
-    max_mortgage_amount = calculate_max_mortgage(params, INTEREST_RATE)
+    max_mortgage_amount = calculate_max_mortgage(params, @@interest_rate)
 
     json_response(amount: max_mortgage_amount)
+  end
+
+  def interest_rate
+    errors = []
+    errors << validate_interest_rate(params['interest_rate'])
+    errors = errors.flatten
+    return json_response("Validation failed: #{errors.join(', ')}", :unprocessable_entity) if errors.present?
+
+    params['interest_rate'] = params['interest_rate'].to_f
+
+    old_rate = @@interest_rate
+    @@interest_rate = params['interest_rate']
+    json_response(old_rate: old_rate, new_rate: @@interest_rate)
   end
 end
