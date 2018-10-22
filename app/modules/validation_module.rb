@@ -67,5 +67,4 @@ module ValidationModule
       "amortization period needs to be betwenn 5 and 25 years inclusive"
     end
   end
-
 end

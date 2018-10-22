@@ -1,4 +1,7 @@
+# Module which contains all of the mortgage insurance logic
 module InsuranceModule
+
+  # Returns the insurance amount given the mortgage parameters
   def calculate_insurance_amount(params)
     raw_mortgage_principal = params['asking_price'] - params['down_payment']
     dp_percentage = ratio_percentage(params['down_payment'], params['asking_price'])
