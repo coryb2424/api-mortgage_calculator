@@ -1,24 +1,82 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This APP is a Mortgage Calulator API with three endpoints.
 
-Things you may want to cover:
+1. GET /payment-amount
+_Returns the payment amount for the given schedule_
 
-* Ruby version
+  Params:
+    * asking_price (INT):
+    * down_payment (INT): at least 5% of first $500k plus 10% of any amount above $500k
+    * amortization_period (INT): Min 5 years, max 25 years
+    * payment_schedule (STRING): weekly, biweekly, monthly
 
-* System dependencies
+  Example:
+    Call: HOST/payment-amount?asking_price=750000&down_payment=50000&payment_schedule=monthly&amortization_period=16
+    Params:
+    ```
+      {
+        asking_price: 750000,
+        down_payment: 50000,
+        payment_schedule: monthly,
+        amortization_period: 16
+      }
 
-* Configuration
+    ```
+    Returns:
+    ```
+      {
+          "amount": 4566.69
+      }
+    ```
 
-* Database creation
+2. GET /mortgage-amount
+_Returns the maximum mortgage given the parameters_
 
-* Database initialization
+  Params:
+    * payment_amount (INT):
+    * down_payment (INT): at least 5% of first $500k plus 10% of any amount above $500k
+    * amortization_period (INT): Min 5 years, max 25 years
+    * payment_schedule (STRING): weekly, biweekly, monthly
 
-* How to run the test suite
+  Example:
+    Call: HOST/mortgage-amount?payment_amount=2500&down_payment=50000&payment_schedule=monthly&amortization_period=12
+    Params:
+    ```
+      {
+        payment_amount: 2500,
+        down_payment: 50000,
+        payment_schedule: monthly,
+        amortization_period: 12
+      }
 
-* Services (job queues, cache servers, search engines, etc.)
+    ```
+    Returns:
+    ```
+      {
+          "amount": 360740.67
+      }
+    ```
 
-* Deployment instructions
+3. PATCH /interest-rate
+_Changes the App's interest rate_
 
-* ...
+  Params:
+    * interest_rate (INT):
+
+  Example:
+    Call: HOST/interest-rate?interest_rate=4.7
+    Params:
+    ```
+      {
+        interest_rate: 4.7
+      }
+
+    ```
+    Returns:
+    ```
+      {
+        "old_rate": 2.5,
+        "new_rate": 4.7
+      }
+    ```

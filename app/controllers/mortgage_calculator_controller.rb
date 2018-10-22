@@ -19,7 +19,7 @@ class MortgageCalculatorController < ApplicationController
   end
 
   # GET /mortgage-amount
-  # Return: The maximum mortgage given the parameters
+  # Returns: The maximum mortgage given the parameters
   def mortgage_amount
     params['payment_amount'] = params['payment_amount'].to_f
     params['amortization_period'] = params['amortization_period'].to_f
