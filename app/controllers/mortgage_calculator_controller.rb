@@ -5,12 +5,8 @@ class MortgageCalculatorController < ApplicationController
   @@interest_rate = 2.5
 
   def payment_amount
-    errors = []
-    errors << validate_ap_and_dp(params['asking_price'], params['down_payment'])
-    errors << validate_payment_schedule(params['payment_schedule'])
-    errors << validate_amortization_period(params['amortization_period'])
-    errors = errors.flatten
-    return json_response("Validation failed: #{errors.join(', ')}", :unprocessable_entity) if errors.present?
+    errors = validate_params(params)
+    return json_response(errors, :unprocessable_entity) if errors.present?
 
     params['asking_price'] = params['asking_price'].to_f
     params['down_payment'] = params['down_payment'].to_f
@@ -22,12 +18,8 @@ class MortgageCalculatorController < ApplicationController
   end
 
   def mortgage_amount
-    errors = []
-    errors << validate_payment_schedule(params['payment_schedule'])
-    errors << validate_amortization_period(params['amortization_period'])
-    errors << validate_payment_amount(params['payment_amount'])
-    errors = errors.flatten
-    return json_response("Validation failed: #{errors.join(', ')}", :unprocessable_entity) if errors.present?
+    errors = validate_params(params)
+    return json_response(errors, :unprocessable_entity) if errors.present?
 
     params['payment_amount'] = params['payment_amount'].to_f
     params['amortization_period'] = params['amortization_period'].to_f
@@ -39,10 +31,8 @@ class MortgageCalculatorController < ApplicationController
   end
 
   def interest_rate
-    errors = []
-    errors << validate_interest_rate(params['interest_rate'])
-    errors = errors.flatten
-    return json_response("Validation failed: #{errors.join(', ')}", :unprocessable_entity) if errors.present?
+    errors = validate_params(params)
+    return json_response(errors, :unprocessable_entity) if errors.present?
 
     params['interest_rate'] = params['interest_rate'].to_f
 
