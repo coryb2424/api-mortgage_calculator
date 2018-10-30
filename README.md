@@ -21,8 +21,8 @@ _Returns the payment amount for the given schedule_
         payment_schedule: monthly,
         amortization_period: 16
       }
+```
 
-    ```
     Returns:
     ```
       {
