@@ -2,6 +2,12 @@
 
 This APP is a Mortgage Calulator API with three endpoints.
 
+INSTRUCTIONS:
+  1. Download/clone
+  2. start rails server: rails s
+  3. Open Postmam, browser, other
+  4. The app is on: localhost:3000
+
 1. GET /payment-amount
   Returns the payment amount for the given schedule
   
@@ -12,7 +18,7 @@ This APP is a Mortgage Calulator API with three endpoints.
     - payment_schedule (STRING): weekly, biweekly, monthly
   
   Example: 
-    Call: HOST/payment-amount?asking_price=750000&down_payment=50000&payment_schedule=monthly&amortization_period=16
+    Call: localhost:3000/payment-amount?asking_price=750000&down_payment=50000&payment_schedule=monthly&amortization_period=16
     Params:
       {
         asking_price: 750000,
@@ -35,7 +41,7 @@ This APP is a Mortgage Calulator API with three endpoints.
     - payment_schedule (STRING): weekly, biweekly, monthly
 
   Example:
-    Call: HOST/mortgage-amount?payment_amount=2500&down_payment=50000&payment_schedule=monthly&amortization_period=12    
+    Call: localhost:3000/mortgage-amount?payment_amount=2500&down_payment=50000&payment_schedule=monthly&amortization_period=12    
     Params:
       {
         payment_amount: 2500,
@@ -55,7 +61,7 @@ This APP is a Mortgage Calulator API with three endpoints.
     - interest_rate (INT):
 
   Example: 
-    Call: HOST/interest-rate?interest_rate=4.7    
+    Call: localhost:3000/interest-rate?interest_rate=4.7    
     Params:
       {
         interest_rate: 4.7
