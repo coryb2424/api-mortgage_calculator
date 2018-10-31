@@ -3,36 +3,30 @@
 This APP is a Mortgage Calulator API with three endpoints.
 
 1. GET /payment-amount
-
-  _Returns the payment amount for the given schedule_
-
+  Returns the payment amount for the given schedule
+  
   Params:
     - asking\_price (INT):
     - down\_payment (INT): at least 5% of first $500k plus 10% of any amount above $500k 
     - amortization\_period (INT): Min 5 years, max 25 years
     - payment\_schedule (STRING): weekly, biweekly, monthly
-
-  Example: HOST/payment-amount?asking\_price=750000&down\_payment=50000&payment\_schedule=monthly&amortization\_period=16
+  
+  Example: 
+    Call: HOST/payment-amount?asking\_price=750000&down\_payment=50000&payment\_schedule=monthly&amortization\_period=16
     Params:
-       ```
-         {
-           asking_price: 750000,
-           down_payment: 50000,
-           payment_schedule: monthly,
-           amortization_period: 16
-         }
-       ```
-
+      {
+        asking_price: 750000,
+        down_payment: 50000,
+        payment_schedule: monthly,
+        amortization_period: 16
+      }    
     Returns:
-      ```
-        {
-            "amount": 4566.69
-        }
-      ```
+      {
+        "amount": 4566.69
+      }
 
 2. GET /mortgage-amount
-  
- _Returns the maximum mortgage given the parameters_
+  Returns the maximum mortgage given the parameters_
 
   Params:
     - payment\_amount (INT):
